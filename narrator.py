@@ -7,9 +7,9 @@ import simpleaudio as sa
 import errno
 from elevenlabs import generate, play, set_api_key, voices
 
-client = OpenAI()
+client = OpenAI(api_key="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")
 
-set_api_key(os.environ.get("ELEVENLABS_API_KEY"))
+#set_api_key(os.environ.get("ELEVENLABS_API_KEY"))
 
 def encode_image(image_path):
     while True:
@@ -25,8 +25,8 @@ def encode_image(image_path):
 
 
 def play_audio(text):
-    audio = generate(text, voice=os.environ.get("ELEVENLABS_VOICE_ID"))
-
+    #audio = generate(text, voice=os.environ.get("ELEVENLABS_VOICE_ID"))
+    audio = generate(text, voice="oiKuG4cfY78oN3loQzAv")
     unique_id = base64.urlsafe_b64encode(os.urandom(30)).decode("utf-8").rstrip("=")
     dir_path = os.path.join("narration", unique_id)
     os.makedirs(dir_path, exist_ok=True)
@@ -56,6 +56,7 @@ def generate_new_line(base64_image):
 def analyze_image(base64_image, script):
     response = client.chat.completions.create(
         model="gpt-4-vision-preview",
+        frequency_penalty= 0.5,
         messages=[
             {
                 "role": "system",
@@ -90,7 +91,7 @@ def main():
         print("🎙️ David says:")
         print(analysis)
 
-        play_audio(analysis)
+       # play_audio(analysis)
 
         script = script + [{"role": "assistant", "content": analysis}]
 
